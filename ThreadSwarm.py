@@ -3,8 +3,10 @@ import threading
 import time
 
 # Carica gli indirizzi IP da file
-swarm1 = TelloSwarm.fromFile("ips1.txt")
+swarm1 = TelloSwarm.fromFile("ips1.txt") #File di testo con gli indirizzi IP del primo swarm
 swarm2 = TelloSwarm.fromFile("ips2.txt")
+Instructions1 = ("Swarm1.txt") #File di testo con le istruzioni di volo del primo swarm
+Instructions2 = ("Swarm2.txt") 
 
 # Creare una barriera per sincronizzare i due thread
 barrier = threading.Barrier(2)
@@ -27,27 +29,13 @@ def takeoff_and_fly(tello, nome):
         barrier.wait()
 
         print(f"[INFO] {nome}: Decollo in corso...")
-        tello.takeoff()
-        tello.move_up(50)
-        tello.move_right(80)
-        time.sleep(3)
-        tello.move_right(80)
-        time.sleep(3)
-        tello.move_up(50)
-        time.sleep(1)
-        tello.move_forward(30)
-        time.sleep(2)
-        tello.move_back(30)
-        time.sleep(5)
-        tello.move_down(50)
-        time.sleep(5)
-        tello.move_left(80)
-        time.sleep(5)
-        tello.move_left(80)
-        time.sleep(5)
-        tello.move_up(50)
-        tello.land()
-        tello.end()
+        with open(Instructions1, 'r') as file:
+            for line in file:
+                command = line.strip()
+                try:
+                    eval(f'{command}')
+                except Exception as e:
+                    print(f"[ERRORE] Errore durante l'esecuzione del comando '{command}' : {e}")
         print(f"[INFO] {nome}: Volare completato.")
     except Exception as e:
         print(f"[ERRORE] {nome}: Errore durante il volo: {e}")
@@ -58,27 +46,13 @@ def takeoff_and_fly2(tello, nome):
         barrier.wait()
 
         print(f"[INFO] {nome}: Decollo in corso...")
-        tello.takeoff()
-        tello.move_up(50)
-        tello.move_left(80)
-        time.sleep(3)
-        tello.move_left(80)
-        time.sleep(3)
-        tello.move_up(50)
-        time.sleep(1)
-        tello.move_back(30)
-        time.sleep(2)
-        tello.move_forward(30)
-        time.sleep(5)
-        tello.move_up(50)
-        time.sleep(5)
-        tello.move_right(80)
-        time.sleep(5)
-        tello.move_right(80)
-        time.sleep(5)
-        tello.move_down(50)
-        tello.land()
-        tello.end()
+        with open(Instructions2, 'r') as file:
+            for line in file:
+                command = line.strip()
+                try:
+                    eval(f'{command}')
+                except Exception as e:
+                    print(f"[ERRORE] Errore durante l'esecuzione del comando '{command}' : {e}")
         print(f"[INFO] {nome}: Volare completato.")
     except Exception as e:
         print(f"[ERRORE] {nome}: Errore durante il volo: {e}")
